@@ -1,7 +1,7 @@
 --[[
-    FreeCell game based on solitaire
+    FreeCell game based on Solitaire
 
-    Author: Colton Ogden, CS50 Twitch team
+    Author of Solitaire version: Colton Ogden, CS50 Twitch team
     For more info, please check https://www.youtube.com/watch?v=BCp7_n-L-tc
 ]]
 

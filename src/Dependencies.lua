@@ -10,11 +10,13 @@ require 'src/Util'
 
 gTextures = {
     ['cards'] = love.graphics.newImage('graphics/playingCards.png'),
-    ['card-back'] = love.graphics.newImage('graphics/cardBack.png')
+    ['card-back'] = love.graphics.newImage('graphics/cardBack.png'),
+    ['win-board'] = love.graphics.newImage('graphics/WordCloud9.png')
 }
 
 gQuads = {
-    ['cards'] = GenerateQuads(gTextures['cards'], CARD_WIDTH, CARD_HEIGHT)
+    ['cards'] = GenerateQuads(gTextures['cards'], CARD_WIDTH, CARD_HEIGHT, CARD_SHEET_WIDE, CARD_SHEET_TALL),
+    ['win-board'] = GenerateQuads(gTextures['win-board'], WINTILE_WIDTH, WINTILE_HEIGHT, WINBOARD_WIDE, WINBOARD_TALL)
 }
 
 gCardQuads = {

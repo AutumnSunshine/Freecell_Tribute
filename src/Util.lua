@@ -2,12 +2,12 @@
     Utility Functions
 ]]
 
-function GenerateQuads(texture, textureWidth, textureHeight)
+function GenerateQuads(texture, textureWidth, textureHeight, textureColumns, textureRows)
     local quadTable = {}
 
-    for x = 0, CARD_WIDTH * (CARD_SHEET_WIDE - 1), CARD_WIDTH do
-        for y = 0, CARD_HEIGHT * (CARD_SHEET_TALL - 1), CARD_HEIGHT do
-            table.insert(quadTable, love.graphics.newQuad(x, y,  CARD_WIDTH, CARD_HEIGHT, texture:getDimensions()))
+    for x = 0, textureWidth * (textureColumns - 1), textureWidth do
+        for y = 0, textureHeight * (textureRows - 1), textureHeight do
+            table.insert(quadTable, love.graphics.newQuad(x, y, textureWidth, textureHeight, texture:getDimensions()))
         end 
     end
 

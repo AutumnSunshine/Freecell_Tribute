@@ -5,22 +5,34 @@
 GameBoard = Class{}
 
 function GameBoard:init()
+    --Cards and game elements
     self.deck = Deck()
     self.tableaus = {}
     self.winPools = {}
     self.freePools = {}
+    
+    --Parameters tracking what is moved and where
     self.cardPickedUp = nil
     self.pickedUpTableau = 0 
     self.numEmptyFreePools = 4
     self.numEmptyTableaus = 0
+    
+    --Parameters to handle display on winning
     self.isWin = false
+    self.pauseTimer = 0
+    self.countTiles = 0
+    self.randTiles = {}
+          
+    --Add-on 
     self.mastercard = MasterCard()
-
+    
     self:generateTableaus()
+    self:generateRandTiles()
+    
 end
 
 --function that checks and sets if cards are ordered, starting from bottom of each tableau 
--- to identify which cards are allowed to move
+-- to identify which cards are allowed to be moved using click-and-drag
 function GameBoard:checkOrder(tableau)
              
              local tempCard = tableau[#tableau]
@@ -92,30 +104,62 @@ function GameBoard:update(dt)
         end
     end 
 
-    -- iterate through all pool cards, allowing mouse input
+    -- iterate through all free pool cards, allowing mouse input
     
     for i = 1, NUM_FREEPOOLS do
         if (#self.freePools[i] > 0) then 
                self.freePools[i][1]:update(dt, self, self.freePools[i], FREEPOOL_PILE)
         end
     end 
+    
+    --check for win condition & update start pauseTimer 
+    if self.isWin then 
+        if self.countTiles < WINBOARD_WIDE * WINBOARD_TALL and self.pauseTimer > 0.2 then
+                self.pauseTimer = 0
+                for i = 1, WINBOARD_TALL  do
+                        self.countTiles = self.countTiles + 1
+                end
+        else                        
+                self.pauseTimer = self.pauseTimer + dt
+        end
+    end
 end
 
 function GameBoard:render()
    
-   self:drawBackground()
-   self.mastercard:render()
-   self:renderTableaus()
-   self:renderPickedUpCards()
-   self:renderPools()
    if self.isWin then
-         --print the congratulations message--
-         love.graphics.clear(0, 0.3, 0, 1)
-         love.graphics.setNewFont(50)
-         love.graphics.setColor(1, 1, 1, 1)
-         love.graphics.printf ("Congratulations! You have won!", 0 ,  WINDOW_HEIGHT/4, WINDOW_WIDTH, "center")
+       self:renderWinboard()
+   else
+        self:drawBackground()
+        self.mastercard:render()
+        self:renderTableaus()
+        self:renderPickedUpCards()
+        self:renderPools()
    end
 
+end
+
+function GameBoard:generateRandTiles()
+    for i = 1, WINBOARD_WIDE * WINBOARD_TALL do 
+        local pos = math.random(#self.randTiles) 
+        table.insert(self.randTiles, pos, i)
+    end
+end
+
+function GameBoard:renderWinboard()
+    for count = 1,  self.countTiles do
+        local pos = self.randTiles[count] - 1
+        local pos_x = math.floor(pos / WINBOARD_TALL)
+        local pos_y = math.floor(pos % WINBOARD_TALL)
+        love.graphics.draw(gTextures['win-board'], gQuads['win-board'][pos + 1], (pos_x)*WINTILE_WIDTH, (pos_y)*WINTILE_HEIGHT)
+    end
+    
+    if self.countTiles == ( WINBOARD_WIDE * WINBOARD_TALL) then
+        love.graphics.setNewFont(50)
+        love.graphics.setColor(1, 0, 0, 1)
+        love.graphics.printf("Congratulations! You have won!", 0 , 0  , WINDOW_WIDTH, "left")
+        love.graphics.setColor(1, 1, 1, 1)    
+    end
 end
 
 function GameBoard:renderPickedUpCards()

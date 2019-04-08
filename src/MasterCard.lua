@@ -45,10 +45,10 @@ self.behind = {
 "There's no secret ingredient. It's just you!",
 "You've fallen right into my trap!",
 "You got a problem buddy? Huh? Huh?",
-"I don't know, don't know...So don't ask me why",
+"I don't know, don't know...So don't ask me why!",
 "From her point of view, losing was something that happened to other people.",
-"There's always a way to turn things around, to find the fun",
-"How you gonna fix this? - Grit, spit and a whole lotta duct tape.",
+"There's always a way to turn things around, to find the fun.",
+"How you gonna fix this? - Grit, spit and a whole lotta duct tape :D",
 "Ruh-roh! Zoinks!!!"
 }
 end
@@ -69,11 +69,19 @@ function MasterCard:update(dt)
 
 end
 function MasterCard:render()         
-         love.graphics.setColor(58/255, 36/255, 59/255, 1)
+         love.graphics.setColor(1, 1, 1, 1)
+         love.graphics.setNewFont(32)
+         love.graphics.printf ("#mastercard", 800, 248, CARD_WIDTH * 3, "center")
+         
+         love.graphics.setColor(0/255, 35/255, 102/255, 1)
          love.graphics.rectangle('fill', 800, 280, CARD_WIDTH * 3, CARD_HEIGHT * 3, 3)
          love.graphics.setColor(1, 1, 1, 1)
+         
          love.graphics.setNewFont(21)
-         love.graphics.printf (self.quote,805, 285, CARD_WIDTH * 2.9, "left")
+         local f = love.graphics.getFont()
+         local width, lines = f:getWrap(self.quote, CARD_WIDTH * 2.9)
+         
+         love.graphics.printf (self.quote,805, 280 + math.floor((11 - #lines) / 2) * f:getHeight(), CARD_WIDTH * 2.9, "left")
          love.graphics.setColor(1, 1, 1, 1)         
 end
 
